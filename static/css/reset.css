@@ -1,0 +1,55 @@
+/* css reset */
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  user-select: none;
+  -webkit-focus-ring-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;
+}
+
+body, html {
+  width: 100%;
+  font-family: "Helvetica Neue", "Microsoft YaHei", Arial, HelveticaNeue, Helvetica, "BBAlpha Sans", sans-serif;
+  font-weight: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: center;
+}
+
+html {
+  -ms-text-size-adjust:100%;
+  -webkit-text-size-adjust:100%;
+}
+
+body {
+  opacity: 1;
+  -webkit-transition:opacity 500ms ease-in;
+  transition:opacity 500ms ease-in;
+}
+
+li {
+  list-style:none;
+}
+
+a {
+  text-decoration:none;
+}
+
+fieldset, img {
+  border: none;
+}
+
+.hide {
+  display:none;
+}
+
+.clearfix:after{content:"";display:block;height:0;clear:both;visibility:hidden}
+
+/* *{-webkit-backface-visibility: hidden;-moz-backface-visibility: hidden;-ms-backface-visibility: hidden;backface-visibility: hidden;} 用于解决某些情况下出现闪屏的问题，若无则不加*/
+
+/* css reset end */

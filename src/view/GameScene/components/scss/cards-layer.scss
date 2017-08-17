@@ -1,0 +1,43 @@
+.handcards-container {
+  width: 100%;
+  // display: flex;
+  // flex-direction: row;
+  // background: #cccccc;
+  position: absolute;
+
+  // height: 100px;
+  text-align: center;
+  left: 0;
+  &.agacards-container {
+    top: 0;
+    .outcards {
+      width: 100%;
+      margin-top: 60px;
+    }
+  }
+  &.selfcards-container {
+    bottom: 0;
+    .outcards {
+      width: 100%;
+      margin-bottom: 60px;
+    }
+  }
+  .handcards {
+
+  }
+  .handcard {
+    // flex-grow: 1;
+    border: 1px solid #999999;
+    width: 40px;
+    height: 60px;
+    display: inline-block;
+  }
+
+  .outcard {
+    border: 1px solid #999999;
+    width: 20px;
+    height: 30px;
+    display: inline-block;
+  }
+
+}
