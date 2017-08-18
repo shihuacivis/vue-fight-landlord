@@ -4,10 +4,19 @@
   // flex-direction: row;
   // background: #cccccc;
   position: absolute;
-
+  vertical-align: top;
   // height: 100px;
   text-align: center;
   left: 0;
+  &.basecards-container {
+    top: 50%;
+    width: 200px;
+    text-align: center;
+    .basecards {
+      width: 100%;
+      margin-top: -30px;
+    }
+  }
   &.agacards-container {
     top: 0;
     .outcards {
@@ -23,7 +32,6 @@
     }
   }
   .handcards {
-
   }
   .handcard {
     // flex-grow: 1;
@@ -31,13 +39,21 @@
     width: 40px;
     height: 60px;
     display: inline-block;
+    line-height: 16px;
+    vertical-align: top;
   }
 
   .outcard {
     border: 1px solid #999999;
-    width: 20px;
-    height: 30px;
+    width: 28px;
+    height: 42px;
     display: inline-block;
+    vertical-align: top;
+  }
+
+  .cardtype {
+    font-size: 12px;
+    height: 12px;
   }
 
 }
