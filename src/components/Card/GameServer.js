@@ -12,17 +12,17 @@ const POWER_PLAY_CARD = 3; // 出牌
 const nSimPlayCardTime = 2000;
 const nSimCallTime = 1000;
 
-let aAllCards = [];
-let bNoCall = false;
-let aRobNum = [0, 0];
+var aAllCards = [];
+var bNoCall = false;
+var aRobNum = [0, 0];
 
-let nCallMult = 1;
-let nRobMult = 1;
-let nBaseMult = 1;
-let nBombMult = 1;
-let nSpringMult = 1;
-let nWhoFirst = 0;
-let timerGame = null;
+var nCallMult = 1;
+var nRobMult = 1;
+var nBaseMult = 1;
+var nBombMult = 1;
+var nSpringMult = 1;
+var nWhoFirst = 0;
+var timerGame = null;
 
 var oGameData = {
   bStartGame: false,
@@ -238,8 +238,8 @@ function handleRobBanker(oData) {
   }
   oGameData.nBankerSeat == oGameData.nAgaSeat && (oGameData.aAgaCards = CardControler.fSortHandCards(oGameData.aAgaCards.concat(oGameData.aBaseCards)));
   oGameData.nBankerSeat == oGameData.nSelfSeat && (oGameData.aSelfCards = CardControler.fSortHandCards(oGameData.aSelfCards.concat(oGameData.aBaseCards)));
-  // console.log('====显示底牌====');
-  // console.log(JSON.stringify(oGameData.aBaseCards));
+  console.log('====显示底牌====');
+  console.log(JSON.stringify(oGameData.aBaseCards));
   // console.log('====地主玩家====');
   // console.log(oGameData.nBankerSeat == oGameData.nAgaSeat ? '对方' : '我方');
   // console.log('====让牌数====');
@@ -365,7 +365,8 @@ function getPlayCards(aCards) {
   var aSelfCards = [];
   var aAgaCards = [];
   var aBaseCards = [];
-  var aRandCards = aCards.concat().sort(sortRand);
+  aCards = aCards.concat();
+  var aRandCards = aCards.sort(sortRand);
   // var aRandCards = [];
   // for (var i = 0; i < 34; i++) {
   //   var nRand = Math.floor(Math.random() * aCards.length);
