@@ -1,5 +1,5 @@
 //牌型
-import {CARDSTYPE} from './CARDSTYPE.js';
+import CARDSTYPE from './CARDSTYPE.js';
 import {CardHelper} from './CardHelper.js';
 
 var CardControler = {
@@ -88,7 +88,7 @@ var CardControler = {
     if (aPokers.length > 4) {
       // 三顺
       var tmp = 18;
-      while (tmp > 8) {
+      while (tmp > 5) {
         var t = CardHelper.fCheckHintCards(CARDSTYPE.SAN_SHUN, power, tmp, aPokers);
         if (t.length > 0) {
           ret = t[0];

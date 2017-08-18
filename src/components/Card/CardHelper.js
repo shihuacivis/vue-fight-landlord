@@ -1,13 +1,13 @@
 // 出牌提示组件
 
-import {CARDSTYPE} from './CARDSTYPE.js';
+import CARDSTYPE from './CARDSTYPE.js';
 import {CardControler} from './CardControler.js';
 
 var CardHelper = {
   aHelpList: []
 , nCurIdx: 0
 , nMaxIdx: 0
-, fGetAvailCards: function(typeid, nPower, nNum, aOriCards) {
+, fGetAvailCards: function(aOriCards, typeid, nPower, nNum) {
     // 帮助选牌入口
     this.nCurIdx = 0;
     this.aHelpList = [];
@@ -41,6 +41,7 @@ var CardHelper = {
     return aRet;
   }
 , fGetFreeCards: function(aOriCards) {
+    // 自由出牌
     var self = this;
     this.aHelpList = [];
     this.nMaxIdx = 0;
@@ -54,7 +55,7 @@ var CardHelper = {
     , '3': []
     , '4': []
     };
-    var aSinggleSmallCard = [];
+    // 小于10的单牌优先出
     for (var i = 0; i < aOriCards.length; i++) {
       var nCard = aOriCards[i];
       var nCardVal = self.fGetCardVal(nCard);
@@ -68,7 +69,7 @@ var CardHelper = {
       var nLen = aCards.length;
       oCardNum[nLen].push(nCardVal);
     }
-    var tmpSingleArr = oCardNum['1'].sort(function(a, b){ return a - b});
+    var tmpSingleArr = oCardNum['1'].sort(CardControler.SORTASC);
     var aRet = [];
     for(var i = 0; i < tmpSingleArr.length; i++) {
       var nPv = tmpSingleArr[i];
@@ -77,17 +78,54 @@ var CardHelper = {
         aRet.push(arr);
       }
     }
+    // 然后找顺子
     var aJunko = CardControler.fGetAutoJunkoCards(aOriCards, 1);
-    if (aJunko.length > 0 && aJunko.length == aOriCards.length) {
-      aRet = [];
-      aRet.push(aJunko);
+    if (aJunko.length > 0) {
+      if (aRet > 0 && aJunko.indexOf(aRet[0])) {
+        //  如果顺子包含最小的单牌 优先出顺子
+        aRet.unshift(aJunko);
+      } else {
+        aRet.push(aJunko);
+      }
     }
+    // 然后找最小的牌
     if (aRet.length == 0) {
-      aCardVal = aCardVal.sort(function(a, b){ return a - b});
+      aCardVal = aCardVal.sort(CardControler.SORTASC);
       for(var i = 0; i < aCardVal.length; i++) {
         var nPv = aCardVal[i];
         var aCards = oCardVal[nPv];
-        aRet.push(aCards);
+        if (aCards.length == 4 && aOriCards.length > 4) {
+          // 最小的牌是炸弹且还有其它牌可出 优先考虑其他牌
+          continue;
+        } else if (aCards.length == 4 && aOriCards.length == 4) {
+          // 炸弹是最后一副牌
+          aRet.push(aCards);
+        } else if (aCards.length == 3) {
+          // 最小牌是3张时，优先找三带二三带一
+          var aDouble = oCardNum['2'].sort(CardControler.SORTASC);
+          var aSingle = oCardNum['1'].sort(CardControler.SORTASC);
+          var nSelect = 0;
+          if (aDouble.length > 0 && aSingle.length > 0) {
+            // 优先选小的
+            nSelect = Math.min(aDouble[0], aSingle[0]);
+          } else if (aDouble.length > 0 && aSingle.length == 0) {
+            nSelect = aDouble[0];
+          } else if (aDouble.length == 0 && aSingle.length > 0 && ((aSingle[0] != 22 && aOriCards.length > 4) || (aSingle[0] == 22 && aOriCards.length == 4))) {
+            // 只有单牌 且不只剩下小王 只剩小王的话可以选
+            nSelect = aSingle[0];
+          } else {
+            // 其他情况只选自己
+          }
+          if (nSelect == 0) {
+            aRet.push(aCards);
+          } else {
+            var aPlusCards = oCardVal[nSelect].concat();
+            aCards = aCards.concat(aPlusCards);
+            aRet.push(aCards);
+          }
+        } else {
+          aRet.push(aCards);
+        }
       }
     }
     if (aOriCards.length == 2 && aOriCards.indexOf(53) > -1 && aOriCards.indexOf(54) > -1) {
@@ -127,7 +165,7 @@ var CardHelper = {
       var nLen = aCards.length;
       oCardNum[nLen].push(nCardVal);
     }
-    aCardVal = aCardVal.sort(function(a, b){ return a - b});
+    aCardVal = aCardVal.sort(CardControler.SORTASC);
     var oFunc = {
       '1': 'fGetOneTypeCards'
     , '2': 'fGetOneTypeCards'
@@ -179,7 +217,7 @@ var CardHelper = {
     // 策略：恰好符合张数 > 按权重从小到大拆
     var ret = [];
     var nPower = nPower;
-    var aCards = oCardNum[nNum].sort(function(a, b){ return a - b});
+    var aCards = oCardNum[nNum].sort(CardControler.SORTASC);
     var aCardVal = aCardVal || []; // 手牌牌值升序排
     var tmpPvArr = this.fGetPerfectCards(aCards, nPower);
     // 如果没有匹配的就拆牌
@@ -208,7 +246,7 @@ var CardHelper = {
           if (!aNextCardList || !aNextCardList.length || aNextCardList.length < nJunkoNum) {
             break;
           }
-          var aList = aNextCardList.sort(function(a, b){ return a - b});
+          var aList = aNextCardList.sort(CardControler.SORTASC);
           var sCards = aList.slice(0, nJunkoNum);
           tmpArr = tmpArr.concat(sCards);
         }
@@ -345,7 +383,7 @@ var CardHelper = {
     aCards = aCards || [];
     var tmpPvArr = [];
     if (aCards.length > 0) {
-      var aPks = aCards.sort(function(a, b){ return a - b}); // 牌值升序排
+      var aPks = aCards.sort(CardControler.SORTASC); // 牌值升序排
       for (var i = 0; i < aPks.length; i++) {
         var nPv = aPks[i];
         nPv > nPower && !(aPks.indexOf(22) > -1 && aPks.indexOf(23) > -1 && nPv > 19) && tmpPvArr.push(nPv);
@@ -360,7 +398,7 @@ var CardHelper = {
     oCardVal = oCardVal || {};
     var tmpPvArr = [];
     var tmpBombArr = [];
-    aCardVal = aCardVal.sort(function(a, b){ return a - b}); // 牌值升序排
+    aCardVal = aCardVal.sort(CardControler.SORTASC); // 牌值升序排
     for (var i = 0; i < aCardVal.length; i++) {
       var nCardVal = aCardVal[i];
       var aCardList = oCardVal[nCardVal];
@@ -375,7 +413,7 @@ var CardHelper = {
     var nNum = nNum || 1;
     for (var i = 0; i < tmpPvArr.length; i++) {
       var nCardVal = tmpPvArr[i];
-      var aCardList = oCardVal[nCardVal].sort(function(a, b){ return a - b});
+      var aCardList = oCardVal[nCardVal].sort(CardControler.SORTASC);
       var sCards = aCardList.slice(0, nNum);
       ret.push(sCards);
     }

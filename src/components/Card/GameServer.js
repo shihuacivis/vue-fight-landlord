@@ -1,34 +1,28 @@
 
-import {CARDSTYPE} from './CARDSTYPE.js';
+import CARDSTYPE from './CARDSTYPE.js';
 import {CardControler} from './CardControler.js';
 import {CardHelper} from './CardHelper.js';
 
 
-var PLAYER_STATUS_NONE = 0;       // 空
-var PLAYER_STATUS_WAIT = 1;       // 等待(按下开始按钮前)
-var PLAYER_STATUS_READY = 2;      // 准备(按下开始按钮后)
-var PLAYER_STATUS_PLAYING = 3;    // 游戏(正在进行游戏)
-var PLAYER_STATUS_ESCAPE = 4;     // 逃跑(游戏被中断)
-var PLAYER_STATUS_EXITEARLY = 5;  // 提前退出
+const POWER_NONE = 0; //不能操作
+const POWER_CALL_BANKER = 1; // 叫地主
+const POWER_ROB_BANKER = 2; // 抢地主
+const POWER_PLAY_CARD = 3; // 出牌
 
+const nSimPlayCardTime = 2000;
+const nSimCallTime = 1000;
 
-var POWER_NONE = 0; //不能操作
-var POWER_CALL_BANKER = 1; // 叫地主
-var POWER_ROB_BANKER = 2; // 抢地主
-var POWER_PLAY_CARD = 3; // 出牌
+let aAllCards = [];
+let bNoCall = false;
+let aRobNum = [0, 0];
 
-
-var aAllCards = [];
-var bNoCall = false;
-var aRobNum = [0, 0];
-
-var nCallMult = 1;
-var nRobMult = 1;
-var nBaseMult = 1;
-var nBombMult = 1;
-var nSpringMult = 1;
-var nWhoFirst = 0;
-var timerGame = null;
+let nCallMult = 1;
+let nRobMult = 1;
+let nBaseMult = 1;
+let nBombMult = 1;
+let nSpringMult = 1;
+let nWhoFirst = 0;
+let timerGame = null;
 
 var oGameData = {
   bStartGame: false,
@@ -115,7 +109,7 @@ function startGame () {
   }
 
 
-  console.log('点击开始游戏');
+  // console.log('点击开始游戏');
 
 
   // 发牌
@@ -128,30 +122,30 @@ function startGame () {
   oGameData.sBaseCardsType = oCards.sBaseCardsType;
   oGameData.nBaseMult = oCards.nBaseMult;
   oGameData.nMing = oCards.nMing;
-  console.info(oGameData.sBaseCardsType);
+  // console.info(oGameData.sBaseCardsType);
 
 
   // 底分
-  console.log('====游戏底分====');
-  console.log('游戏底分：', oGameData.nBaseScore);
+  // console.log('====游戏底分====');
+  // console.log('游戏底分：', oGameData.nBaseScore);
 
   // 倍数 叫地主 抢地主 底牌 炸弹 春天
-  console.log('====游戏倍数====');
-  console.log('游戏倍数：', nCallMult * nRobMult * nBaseMult * nBombMult * nSpringMult);
+  // console.log('====游戏倍数====');
+  // console.log('游戏倍数：', nCallMult * nRobMult * nBaseMult * nBombMult * nSpringMult);
   oGameData.aMult = [nCallMult ,nRobMult ,nBaseMult ,nBombMult ,nSpringMult];
 
   // 开始发牌
-  console.log('====发牌====');
-  console.log('%c我方:' + JSON.stringify(oGameData.aSelfCards), 'color:green');
-  console.log('%c对方:' + JSON.stringify(oGameData.aAgaCards), 'color:blue');
-  console.log('明牌在：' + (nWhoFirst == oGameData.nSelfSeat ? '我方' : '对方') + ',' + oGameData.nMing);
-  console.log('底牌:' + JSON.stringify(oGameData.aBaseCards));
+  // console.log('====发牌====');
+  // console.log('%c我方:' + JSON.stringify(oGameData.aSelfCards), 'color:green');
+  // console.log('%c对方:' + JSON.stringify(oGameData.aAgaCards), 'color:blue');
+  // console.log('明牌在：' + (nWhoFirst == oGameData.nSelfSeat ? '我方' : '对方') + ',' + oGameData.nMing);
+  // console.log('底牌:' + JSON.stringify(oGameData.aBaseCards));
 
 
 
   timerGame = setTimeout(function(){
     handleMsgPower({nSeat: nWhoFirst, nPower: POWER_CALL_BANKER, nTime: 30});
-  }, 3000);
+  }, nSimCallTime);
 
 };
 
@@ -163,8 +157,8 @@ function handleCallBanker(oData) {
   var nSeat = oData.nSeat;
   var bPower = oData.bPower;
 
-  console.log('====叫地主====');
-  console.log(nSeat == oGameData.nSelfSeat ? '我方' : '对方', bPower ? '叫地主' : '不叫');
+  // console.log('====叫地主====');
+  // console.log(nSeat == oGameData.nSelfSeat ? '我方' : '对方', bPower ? '叫地主' : '不叫');
   oGameData.oCallLandlord = {
     nSeat: nSeat,
     nStep: 0,
@@ -190,8 +184,8 @@ function handleCallBanker(oData) {
 function handleRobBanker(oData) {
   var nSeat = oData.nSeat;
   var bPower = oData.bPower;
-  console.log('====抢地主====');
-  console.log(nSeat == oGameData.nSelfSeat ? '我方' : '对方', bPower ? '抢地主' : '不抢');
+  // console.log('====抢地主====');
+  // console.log(nSeat == oGameData.nSelfSeat ? '我方' : '对方', bPower ? '抢地主' : '不抢');
   oGameData.nSpread = bPower ? (oGameData.nSpread + 1) : oGameData.nSpread;
   oGameData.oCallLandlord = {
     nSeat: nSeat,
@@ -200,8 +194,8 @@ function handleRobBanker(oData) {
   };
   if (bPower) {
     nRobMult = nRobMult * 2;
-    console.log('====游戏倍数====');
-    console.log('游戏倍数：', nCallMult * nRobMult * nBaseMult * nBombMult * nSpringMult);
+    // console.log('====游戏倍数====');
+    // console.log('游戏倍数：', nCallMult * nRobMult * nBaseMult * nBombMult * nSpringMult);
     oGameData.aMult = [nCallMult ,nRobMult ,nBaseMult ,nBombMult ,nSpringMult];
   }
 
@@ -244,15 +238,15 @@ function handleRobBanker(oData) {
   }
   oGameData.nBankerSeat == oGameData.nAgaSeat && (oGameData.aAgaCards = CardControler.fSortHandCards(oGameData.aAgaCards.concat(oGameData.aBaseCards)));
   oGameData.nBankerSeat == oGameData.nSelfSeat && (oGameData.aSelfCards = CardControler.fSortHandCards(oGameData.aSelfCards.concat(oGameData.aBaseCards)));
-  console.log('====显示底牌====');
-  console.log(JSON.stringify(oGameData.aBaseCards));
-  console.log('====地主玩家====');
-  console.log(oGameData.nBankerSeat == oGameData.nAgaSeat ? '对方' : '我方');
-  console.log('====让牌数====');
-  console.log(oGameData.nSpread);
-  console.log('====当前手牌====');
-  console.log('%c我方:' + JSON.stringify(oGameData.aSelfCards), 'color:green', oGameData.aSelfCards.length);
-  console.log('%c对方:' + JSON.stringify(oGameData.aAgaCards), 'color:blue', oGameData.aAgaCards.length);
+  // console.log('====显示底牌====');
+  // console.log(JSON.stringify(oGameData.aBaseCards));
+  // console.log('====地主玩家====');
+  // console.log(oGameData.nBankerSeat == oGameData.nAgaSeat ? '对方' : '我方');
+  // console.log('====让牌数====');
+  // console.log(oGameData.nSpread);
+  // console.log('====当前手牌====');
+  // console.log('%c我方:' + JSON.stringify(oGameData.aSelfCards), 'color:green', oGameData.aSelfCards.length);
+  // console.log('%c对方:' + JSON.stringify(oGameData.aAgaCards), 'color:blue', oGameData.aAgaCards.length);
   handleMsgPower({nSeat: oGameData.nBankerSeat, nPower: POWER_PLAY_CARD, nTime: 30});
 };
 
@@ -285,8 +279,8 @@ function handlePlayCards(oData) {
     oGameData.aMult = [nCallMult ,nRobMult ,nBaseMult ,nBombMult ,nSpringMult];
   }
 
-  console.log(oGameData.nSelfSeat == nSeat ? '%c====我方出牌====' : '%c====对方出牌====', oGameData.nSelfSeat == nSeat ? 'color:green' : 'color:blue');
-  console.log(JSON.stringify(oGameData.oLastOut));
+  // console.log(oGameData.nSelfSeat == nSeat ? '%c====我方出牌====' : '%c====对方出牌====', oGameData.nSelfSeat == nSeat ? 'color:green' : 'color:blue');
+  // console.log(JSON.stringify(oGameData.oLastOut));
 
   if (checkGameOver()) {
     oGameData.bStartGame = false;
@@ -322,7 +316,7 @@ function handleMsgPower(oData) {
     var aOut = [];
     if (nLastType == 0) {
       // 上家不出 自由出牌
-      aAvail = CardHelper.fGetFreeCards(aHandCards);
+      var aAvail = CardHelper.fGetAvailCards(aHandCards, nLastType, nLastPower, nLastCount);
       if (aAvail.length > 0) {
         // 有可出的牌
         aOut = aAvail[0];
@@ -332,7 +326,7 @@ function handleMsgPower(oData) {
         // console.error('出牌逻辑有误')
       }
     } else {
-      var aAvail = CardHelper.fGetAvailCards(nLastType, nLastPower, nLastCount, aHandCards);
+      var aAvail = CardHelper.fGetAvailCards(aHandCards, nLastType, nLastPower, nLastCount);
       if (aAvail.length > 0) {
         // 有可出的牌
         aOut = aAvail[0];
@@ -346,19 +340,19 @@ function handleMsgPower(oData) {
 
     timerGame = setTimeout(function(){
       handlePlayCards(oOutData);
-    }, 500);
+    }, nSimPlayCardTime);
   } else if (nPower == POWER_CALL_BANKER) {
     // 叫地主模拟
     var bRandom = Math.random() > 0.01;
     timerGame = setTimeout(function(){
       handleCallBanker({nSeat: nSeat, bPower: bRandom});
-    }, 500);
+    }, nSimCallTime);
   } else if(nPower == POWER_ROB_BANKER) {
     // 抢地主模拟
     var bRandom = Math.random() > 0.01;
     timerGame = setTimeout(function(){
       handleRobBanker({nSeat: nSeat, bPower: bRandom});
-    }, 500);
+    }, nSimCallTime);
   }
 };
 
@@ -542,7 +536,7 @@ function checkGameOver() {
     var bSpring = oGameData.aAgaCards.length == nAgaFullCards;
     if (bSpring) {
       nSpringMult = nSpringMult * 2;
-      console.info('春天');
+      // console.info('春天');
       oGameData.aMult = [nCallMult ,nRobMult ,nBaseMult ,nBombMult ,nSpringMult];
     }
 
@@ -554,9 +548,9 @@ function checkGameOver() {
     nAgaScore = -nAgaScore;
 
 
-    console.log('%c====结束====', 'color:green');
-    console.log('%c我方获胜', 'color:green');
-    console.log(oGameData.nBankerSeat == oGameData.nSelfSeat ? '地主' : '农民' + '获胜');
+    // console.log('%c====结束====', 'color:green');
+    // console.log('%c我方获胜', 'color:green');
+    // console.log(oGameData.nBankerSeat == oGameData.nSelfSeat ? '地主' : '农民' + '获胜');
     var sWinner = '我方';
     var sWinnerType = oGameData.nBankerSeat == oGameData.nSelfSeat ? '地主' : '农民';
     oGameData.oResult = {
@@ -571,7 +565,7 @@ function checkGameOver() {
     var bSpring = oGameData.aSelfCards.length == nSelfFullCards;
     if (bSpring) {
       nSpringMult = nSpringMult * 2;
-      console.info('春天');
+      // console.info('春天');
     }
     var rate = nCallMult * nRobMult * nBaseMult * nBombMult * nSpringMult;
     var nSelfScore =  baseScore * rate;
@@ -579,9 +573,9 @@ function checkGameOver() {
 
     nSelfScore = -nSelfScore;
 
-    console.log('%c====结束====', 'color:blue');
-    console.log('%c对方获胜', 'color:blue');
-    console.log(oGameData.nBankerSeat == oGameData.nAgaSeat ? '地主' : '农民' + '获胜');
+    // console.log('%c====结束====', 'color:blue');
+    // console.log('%c对方获胜', 'color:blue');
+    // console.log(oGameData.nBankerSeat == oGameData.nAgaSeat ? '地主' : '农民' + '获胜');
     var sWinner = '对方';
     var sWinnerType = oGameData.nBankerSeat == oGameData.nAgaSeat ? '地主' : '农民';
     oGameData.oResult = {

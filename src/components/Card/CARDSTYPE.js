@@ -1,5 +1,5 @@
 //nTypeID
-var CARDSTYPE = {
+const CARDSTYPE = {
   YI_ZHANG: 1,           // 单张
   ER_ZHANG: 2,           // 对子
   SAN_ZHANG: 3,           // 三张
@@ -13,4 +13,4 @@ var CARDSTYPE = {
   SI_DAI_ER: 20         // 四带二
 }
 
-export {CARDSTYPE};
+export default CARDSTYPE;
