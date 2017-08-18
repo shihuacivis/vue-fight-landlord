@@ -357,7 +357,7 @@ function handleMsgPower(oData) {
 };
 
 function sortRand() {
-  return Math.random() < 0.5;
+  return 0.5 - Math.random();
 }
 
  // 随机生成牌局的手牌和底牌
