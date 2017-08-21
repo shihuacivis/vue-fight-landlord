@@ -81,7 +81,7 @@ var CardHelper = {
     // 然后找顺子
     var aJunko = CardControler.fGetAutoJunkoCards(aOriCards, 1);
     if (aJunko.length > 0) {
-      if (aRet > 0 && aJunko.indexOf(aRet[0])) {
+      if (aRet.length > 0 && aJunko.indexOf(aRet[0][0])) {
         //  如果顺子包含最小的单牌 优先出顺子
         aRet.unshift(aJunko);
       } else {
