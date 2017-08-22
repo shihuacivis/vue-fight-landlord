@@ -1,4 +1,3 @@
-
 import CARDSTYPE from './CARDSTYPE.js';
 import {CardControler} from './CardControler.js';
 import {CardHelper} from './CardHelper.js';
@@ -31,7 +30,8 @@ var nSpringMult = 1;
 var nWhoFirst = 0;
 var timerGame = null;
 
-var oGameData = {
+
+const oGameData = {
   bStartGame: false,
   nSelfSeat: 0,
   nAgaSeat: 1,

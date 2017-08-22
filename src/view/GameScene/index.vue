@@ -1,25 +1,37 @@
 <template>
   <div class="game-scene" id="game-scene">
     <selfcardsLayer
-    :aCards="aSelfCards"
-    :aOutCards="aSelfOut"
-    :oAgaOut="oLastOut"
-    :nCallLandlord="nSelfCallLandlord"
-    :bNoOut="bSelfNoOut"
-    :aSelfSelectCards="aSelfSelectCards"
-    @onChangeSelectCards="handleChangeSelectCards"
-    ></selfcardsLayer>
-    <basecardsLayer :aCards="aBaseCards" :nBaseScore="nBaseScore" :nMult="nMult" :sBaseCardsType="sBaseCardsType" :sBanker="sWhoIsBanker" :nSpread="nSpread"></basecardsLayer>
-    <agacardsLayer :aCards="aAgaCards" :aOutCards="aAgaOut" :nCallLandlord="nAgaCallLandlord" :bNoOut="bAgaNoOut"></agacardsLayer>
+      :aCards="aSelfCards"
+      :aOutCards="aSelfOut"
+      :oAgaOut="oLastOut"
+      :nCallLandlord="nSelfCallLandlord"
+      :bNoOut="bSelfNoOut"
+      :aSelfSelectCards="aSelfSelectCards"
+      @onChangeSelectCards="handleChangeSelectCards">
+    </selfcardsLayer>
+    <basecardsLayer
+      :aCards="aBaseCards"
+      :nBaseScore="nBaseScore"
+      :nMult="nMult"
+      :sBaseCardsType="sBaseCardsType"
+      :sBanker="sWhoIsBanker"
+      :nSpread="nSpread">
+    </basecardsLayer>
+    <agacardsLayer 
+      :aCards="aAgaCards"
+      :aOutCards="aAgaOut"
+      :nCallLandlord="nAgaCallLandlord" 
+      :bNoOut="bAgaNoOut">
+    </agacardsLayer>
     <resultLayer v-show="oResult.sWinner != ''" :sWinner="oResult.sWinner" :sWinnerType="oResult.sWinnerType"></resultLayer>
     <btnLayer
-    :nBtnGroupType="nBtnGroupType"
-    :bEnabledPlayCards="bEnabledPlayCards"
-    @onBtnCallLandlord="handleBtnCallLandlord"
-    @onBtnRobLandlord="handleBtnRobLandlord"
-    @onBtnTips="handleBtnTips"
-    @onBtnPlayCards="handleBtnPlayCards"
-    ></btnLayer>
+      :nBtnGroupType="nBtnGroupType"
+      :bEnabledPlayCards="bEnabledPlayCards"
+      @onBtnCallLandlord="handleBtnCallLandlord"
+      @onBtnRobLandlord="handleBtnRobLandlord"
+      @onBtnTips="handleBtnTips"
+      @onBtnPlayCards="handleBtnPlayCards">
+    </btnLayer>
     <div class="menu-container">
       <div class="btn-start" @click="handleBtnStart">{{sBtnWords}}</div>
     </div>
@@ -28,14 +40,13 @@
 
 <script>
 import './scss/game-scene.scss';
-import './scss/cards-layer.scss';
 import selfcardsLayer from './components/selfcards-layer.vue';
 import agacardsLayer from './components/agacards-layer.vue';
 import basecardsLayer from './components/basecards-layer.vue';
 import resultLayer from './components/result-layer.vue';
 import btnLayer from './components/btn-layer.vue';
 
-import {GameServer,oGameData, GAMEPOWER} from '@/components/Card/GameServer.js';
+import {GameServer, oGameData, GAMEPOWER} from '@/components/Card/GameServer.js';
 import {CardHelper} from '@/components/Card/CardHelper.js';
 import {CardControler} from '@/components/Card/CardControler.js';
 import CARDSTYPE from '@/components/Card/CARDSTYPE.js';
@@ -64,7 +75,6 @@ export default {
       if (this.nBankerSeat == this.nSelfSeat) {
         // 自己成为地主时获取提示
         this.aSelfAvailCards = CardHelper.fGetAvailCards(this.aSelfCards, 0, 0, 0);
-        console.info(this.aSelfAvailCards, this.aSelfCards)
       }
     },
     'bAvailOutCards'(newVal) {

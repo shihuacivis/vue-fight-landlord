@@ -71,6 +71,7 @@ export default {
   },
   methods: {
     handleReleaseOutside(e) {
+      console.info(e);
       if (this.nStartIdx != -1) {
         this.handlePickCardEnd();
       } else {
@@ -114,7 +115,7 @@ export default {
       });
       this.nStartIdx = -1;
       let aSelCards = CardControler.fTouchCards(this.aPickedCards, this.aCards, this.aUpCards, this.oAgaOut);
-      console.info('选择卡牌:' + aSelCards);
+      // console.info('选择卡牌:' + aSelCards);
       this.$emit('onChangeSelectCards', aSelCards);
     },
     handleMoveUpCards(aSelCards = []) {
