@@ -2,12 +2,9 @@
   <div 
     :class="sCardClass"
     :style="fCheckCardColor(nCard)"
-    @mousedown.stop="handleSelect"
-    @touchstart.stop="handleSelect"
-    @mousemove.stop="handleMove"
-    @touchmove.stop="handleMove"
-    @mouseup.stop="handleRelease"
-    @touchend.stop="handleRelease">
+    v-touch_start="handleSelect"
+    v-touch_move="handleMove"
+    v-touch_end="handleRelease">
     <div>{{nCard|ftCardVal}}</div>
     <div class="cardtype">{{nCard|ftCardType}}</div>
   </div>
@@ -15,12 +12,21 @@
 
 <script>
 import {GameServer} from '@/components/Card/GameServer.js';
+import touch_start from '@/directive/touchstart';
+import touch_move from '@/directive/touchmove';
+import touch_end from '@/directive/touchend';
+
 export default {
   name: 'basecardsLayer',
   props: ['nCard', 'nSizeType', 'bSelected', 'bPicked'],
   data () {
     return {
     }
+  },
+  directives: {
+    touch_start,
+    touch_move,
+    touch_end
   },
   filters: {
     ftCardType(nCard) {
@@ -51,9 +57,11 @@ export default {
       !this.bPicked && this.$emit('onPickCardStart');
     },
     handleMove() {
+      console.info('move');
       this.$emit('onPickCardMove');
     },
-    handleRelease() {
+    handleRelease(e) {
+      console.info(e);
       this.$emit('onPickCardEnd');
     },
     fCheckCardColor(nCard) {

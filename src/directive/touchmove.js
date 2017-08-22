@@ -1,6 +1,6 @@
-const HANDLER = '_vue_touchendouside_handler';
-const EVENT_MOBILE = 'touchend';
-const EVENT_PC = 'mouseup';
+const HANDLER = '_vue_touchmove_handler';
+const EVENT_MOBILE = 'touchmove';
+const EVENT_PC = 'mousemove';
 export default {
   /*
    @param el 指令所绑定的元素
@@ -9,9 +9,6 @@ export default {
    */
   bind (el, binding, vnode) {
     const documentHandler = function(e) {
-      if(!vnode.context ||  e.target.id != 'game-scene') {
-        return false;
-      }
       let bMobile = navigator.userAgent.match(/Android/i)  
                 || navigator.userAgent.match(/webOS/i)  
                 || navigator.userAgent.match(/iPhone/i)  
@@ -19,9 +16,13 @@ export default {
                 || navigator.userAgent.match(/iPod/i)  
                 || navigator.userAgent.match(/BlackBerry/i)  
                 || navigator.userAgent.match(/Windows Phone/i);
+      console.info(e.target);
       if (bMobile && e.type == EVENT_PC) {
         return false;
       } else if (!bMobile &&  e.type == EVENT_MOBILE){
+        return false;
+      }
+      if(!vnode.context) {
         return false;
       }
       if (binding.expression) {
@@ -45,7 +46,7 @@ export default {
     el[HANDLER].bindingFn = binding.value;
   },
   unbind(el) {
-    document.removeEventListener(EVENT_MOBILE, el[HANDLER].documentHandler, false);
-    document.removeEventListener(EVENT_PC, el[HANDLER].documentHandler, false);
+    el.removeEventListener(EVENT_MOBILE, el[HANDLER].documentHandler, false);
+    el.removeEventListener(EVENT_PC, el[HANDLER].documentHandler, false);
   }
 }

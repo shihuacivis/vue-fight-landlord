@@ -71,11 +71,10 @@ export default {
   },
   methods: {
     handleReleaseOutside(e) {
-      console.info(e);
-      if (this.nStartIdx != -1) {
+      if (this.nStartIdx != -1 && this.aPickedCards.length > 0) {
         this.handlePickCardEnd();
       } else {
-        this.aPickedCards.length > 0 && this.handleMoveDownAllCards();
+        this.handleMoveDownAllCards();
       }
     },
     handlePickCardStart(oCard = {}, index = -1) {
