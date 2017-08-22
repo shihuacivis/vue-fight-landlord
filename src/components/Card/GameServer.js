@@ -12,6 +12,13 @@ const POWER_PLAY_CARD = 3; // 出牌
 const nSimPlayCardTime = 2000;
 const nSimCallTime = 1000;
 
+const GAMEPOWER = {
+  POWER_NONE: POWER_NONE,
+  POWER_CALL_BANKER: POWER_CALL_BANKER,
+  POWER_ROB_BANKER: POWER_ROB_BANKER,
+  POWER_PLAY_CARD: POWER_PLAY_CARD
+};
+
 var aAllCards = [];
 var bNoCall = false;
 var aRobNum = [0, 0];
@@ -29,6 +36,12 @@ var oGameData = {
   nSelfSeat: 0,
   nAgaSeat: 1,
   nBankerSeat: -1,
+  nSelfPower: 0,
+  bAvailOutCards: false,
+  aSelfSelectCards: [],
+  nSelfSelectCasrdsType: 0,
+  nSelfSelectCasrdsPower: 0,
+  aSelfAvailCards: [],
   aSelfCards: [],
   aAgaCards: [],
   aMult: [1, 1, 1, 1, 1],
@@ -84,6 +97,11 @@ function startGame () {
   oGameData.nSelfSeat =  0;
   oGameData.nAgaSeat =  1;
   oGameData.nBankerSeat =  -1;
+  oGameData.nSelfPower =  0;
+  oGameData.bAvailOutCards = false;
+  oGameData.aSelfSelectCards = [];
+  oGameData.nSelfSelectCasrdsType = 0;
+  oGameData.nSelfSelectCasrdsPower = 0;
   oGameData.aSelfCards =  [];
   oGameData.aAgaCards =  [];
   oGameData.aMult =  [1, 1, 1, 1, 1];
@@ -294,10 +312,12 @@ function handlePlayCards(oData) {
 function handleMsgPower(oData) {
   var nSeat = oData.nSeat;
   var nPower = oData.nPower;
-
-  // if(nSeat == oGameData.nSelfSeat){
-  //   return;
-  // }
+  if(nSeat == oGameData.nSelfSeat){
+    oGameData.nSelfPower = nPower;
+    return;
+  } else {
+    oGameData.nSelfPower = 0;
+  }
 
   if (nPower == POWER_PLAY_CARD) {
     // 模拟自动出牌
@@ -593,8 +613,12 @@ var GameServer = {};
 GameServer.startGame = startGame;
 GameServer.getCardVal = getCardVal;
 GameServer.getCardType = getCardType;
+GameServer.handleCallBanker = handleCallBanker;
+GameServer.handleRobBanker = handleRobBanker;
+GameServer.handlePlayCards = handlePlayCards;
 
 export {
   GameServer,
-  oGameData
+  oGameData,
+  GAMEPOWER
 };

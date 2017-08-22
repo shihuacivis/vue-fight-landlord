@@ -32,6 +32,7 @@
     }
   }
   .handcards {
+    display: inline-block;
   }
   .handcard {
     // flex-grow: 1;
@@ -41,6 +42,14 @@
     display: inline-block;
     line-height: 16px;
     vertical-align: top;
+    transition: transform .1s linear;
+    &.move-up {
+      transform: translate3d(0, -20px, 0);
+    }
+    &.picking {
+      background: rgba(0, 0, 0, 0.3);
+      transition: background 0.1s linear all;
+    }
   }
 
   .outcard {

@@ -1,5 +1,13 @@
 <template>
-  <div :class="sCardClass" :style="fCheckCardColor(nCard)">
+  <div 
+    :class="sCardClass"
+    :style="fCheckCardColor(nCard)"
+    @mousedown.stop="handleSelect"
+    @touchstart.stop="handleSelect"
+    @mousemove.stop="handleMove"
+    @touchmove.stop="handleMove"
+    @mouseup.stop="handleRelease"
+    @touchend.stop="handleRelease">
     <div>{{nCard|ftCardVal}}</div>
     <div class="cardtype">{{nCard|ftCardType}}</div>
   </div>
@@ -9,7 +17,7 @@
 import {GameServer} from '@/components/Card/GameServer.js';
 export default {
   name: 'basecardsLayer',
-  props: ['nCard', 'nSizeType'],
+  props: ['nCard', 'nSizeType', 'bSelected', 'bPicked'],
   data () {
     return {
     }
@@ -25,13 +33,29 @@ export default {
       return nVal;
     }
   },
+  watch: {
+  },
   computed: {
     sCardClass() {
       let aSize = ['handcard', 'outcard'];
-      return aSize[this.nSizeType];
+      return {
+        'handcard': this.nSizeType == 0,
+        'outcard':  this.nSizeType == 1,
+        'move-up': this.bSelected,
+        'picking': this.bPicked
+      };
     }
   },
   methods: {
+    handleSelect() {
+      !this.bPicked && this.$emit('onPickCardStart');
+    },
+    handleMove() {
+      this.$emit('onPickCardMove');
+    },
+    handleRelease() {
+      this.$emit('onPickCardEnd');
+    },
     fCheckCardColor(nCard) {
       let nType = GameServer.getCardType(nCard);
       let oColor = {'color': '#000000'};
@@ -40,6 +64,9 @@ export default {
       }
       return oColor;
     }
+  },
+  mounted() {
+    // this.bCanTouch = document.ontouchstart !== null;
   }
 }
 </script>

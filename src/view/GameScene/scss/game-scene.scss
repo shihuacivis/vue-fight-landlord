@@ -28,4 +28,43 @@ html, body {
     position: absolute;
     text-align: left;
   }
+  .btn-container {
+    .btn-group {
+      position: absolute;
+      top: 60%;
+      // left: 50%;
+      width: 100%;
+      text-align: center;
+      .button {
+        display: inline-block;
+        width: 100px;
+        height: 40px;
+        border: 1px solid #ccc;
+        text-align: center;
+        text-align: center;
+        line-height: 40px;
+
+        color: #fff;
+        &.disabled {
+          background: #fff;
+          color: #ccc;
+        }
+        &.green {
+          background: green;
+        }
+        &.yellow {
+          background: yellow;
+        }
+        &.red {
+          background: red;
+        }
+        &.blue {
+          background: blue;
+        }
+      }
+      .button+.button {
+        margin-left: 30px;
+      }
+    }
+  }
 }

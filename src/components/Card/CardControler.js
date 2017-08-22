@@ -508,7 +508,7 @@ var CardControler = {
       }
       if (aPlane.length >= 2) {
         bTriple = true;
-        nRest = nLen - aPlane.length * 3;
+        var nRest = nLen - aPlane.length * 3;
         if (nRest == aPlane.length || nRest == 2 * aPlane.length) {
           bOther = true;
         }
