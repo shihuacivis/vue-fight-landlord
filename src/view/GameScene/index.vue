@@ -60,6 +60,13 @@ export default {
         this.aSelfAvailCards = CardHelper.fGetAvailCards(this.aSelfCards, nType, nPower, nNum);
       }
     },
+    'nBankerSeat'(newVal) {
+      if (this.nBankerSeat == this.nSelfSeat) {
+        // 自己成为地主时获取提示
+        this.aSelfAvailCards = CardHelper.fGetAvailCards(this.aSelfCards, 0, 0, 0);
+        console.info(this.aSelfAvailCards, this.aSelfCards)
+      }
+    },
     'bAvailOutCards'(newVal) {
       console.info( newVal ? '能出' : '不能出');
     },
@@ -162,7 +169,7 @@ export default {
       if (this.nBankerSeat == this.nSelfSeat) {
         return '我方';
       } else if (this.nBankerSeat == this.nAgaSeat) {
-        return '对方'
+        return '对方';
       }
       return '';
     },

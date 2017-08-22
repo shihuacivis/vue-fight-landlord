@@ -26,8 +26,8 @@ var CardHelper = {
       }
       var aRocket = this.fCheckHintCards(CARDSTYPE.HUO_JIAN, 0, 2, aOriCards);
       aRocket.length > 0 && (this.aHelpList = this.aHelpList.concat(aRocket));
-      this.nMaxIdx = this.aHelpList.length;
     }
+    this.nMaxIdx = this.aHelpList.length;
     return this.aHelpList;
   }
 , fGetHintCards: function() {

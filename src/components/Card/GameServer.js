@@ -302,6 +302,7 @@ function handlePlayCards(oData) {
 
   if (checkGameOver()) {
     oGameData.bStartGame = false;
+    oGameData.nSelfPower = 0;
     return;
   }
   var nNext = nSeat == oGameData.nSelfSeat ? oGameData.nAgaSeat : oGameData.nSelfSeat;
