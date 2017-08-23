@@ -5,17 +5,18 @@
       <div v-if="bNoOut">不出</div>
       <card :nCard="oCard" :nSizeType="1" :key="oCard" v-for="(oCard, index) in aOutCards"></card>
     </div>
-    <div class="handcards" v-releaseoutside="handleReleaseOutside">
-      <card 
+    <div class="handcards"
+    v-releaseoutside="handleReleaseOutside"
+    v-touch_start="handleSelect"
+    v-touch_move="handleMove"
+    v-touch_end="handleRelease">
+      <card
         v-for="(oCard, index) in aHandCards"
         :nCard="oCard.nCard"
         :nSizeType="0"
         :key="oCard.nCard"
         :bSelected="oCard.bSelected"
         :bPicked="oCard.bPicked"
-        @onPickCardStart="handlePickCardStart(oCard, index)"
-        @onPickCardMove="handlePickCardMove(oCard, index)"
-        @onPickCardEnd="handlePickCardEnd(oCard, index)"
       ></card>
     </div>
   </div>
@@ -26,7 +27,11 @@
 
 
 import card from './components/card.vue';
-import releaseoutside from '../../../directive/releaseoutside';
+import releaseoutside from '@/directive/releaseoutside';
+import touch_start from '@/directive/touchstart';
+import touch_move from '@/directive/touchmove';
+import touch_end from '@/directive/touchend';
+
 import {CardControler} from '@/components/Card/CardControler.js';
 
 export default {
@@ -36,6 +41,9 @@ export default {
   },
   directives: {
     releaseoutside,
+    touch_start,
+    touch_move,
+    touch_end
   },
   props: ['aCards', 'aOutCards', 'nCallLandlord', 'bNoOut', 'oAgaOut', 'aSelfSelectCards'],
   data () {
@@ -70,6 +78,30 @@ export default {
   computed: {
   },
   methods: {
+    handleSelect(index = -1) {
+      // !this.bPicked && this.$emit('onPickCardStart');
+      console.info(index);
+      if (index == -1) {
+        return;
+      }
+      let oCard = this.aHandCards[index];
+      this.handlePickCardStart(oCard, index);
+    },
+    handleMove(index = -1) {
+      if (index == -1) {
+        return;
+      }
+      let oCard = this.aHandCards[index];
+      this.handlePickCardMove(oCard, index);
+    },
+    handleRelease(index = -1) {
+      if (index == -1) {
+        this.handleReleaseOutside();
+      } else {
+        let oCard = this.aHandCards[index];
+        this.handlePickCardEnd(oCard, index);
+      }
+    },
     handleReleaseOutside(e) {
       if (this.nStartIdx != -1 && this.aPickedCards.length > 0) {
         this.handlePickCardEnd();
