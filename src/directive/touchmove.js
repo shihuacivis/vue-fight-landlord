@@ -33,13 +33,21 @@ export default {
       }
       let $target = document.elementFromPoint(params.clientX, params.clientY);
       let index = -1;
-      if (el.contains($target)) {
-        el.childNodes.forEach((child, idx) => {
-          if ($target.isEqualNode(child)) {
+      let aTargetEl = [];
+      while ($target.tagName.toLowerCase() != 'body') {
+        aTargetEl.push($target);
+        $target = $target.parentNode;
+      }
+      for (let idx = 0, len = el.childNodes.length; idx < len; idx++) {
+        let child = el.childNodes[idx];
+        for (let i = 0, l = aTargetEl.length; i < l; i++) {
+          let oEl = aTargetEl[i];
+          if (child.isEqualNode(oEl)) {
             index = idx;
+            break;
           }
-        })
-      };
+        }
+      }
       if(!vnode.context) {
         return false;
       }

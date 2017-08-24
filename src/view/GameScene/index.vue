@@ -23,7 +23,11 @@
       :nCallLandlord="nAgaCallLandlord" 
       :bNoOut="bAgaNoOut">
     </agacardsLayer>
-    <resultLayer v-show="oResult.sWinner != ''" :sWinner="oResult.sWinner" :sWinnerType="oResult.sWinnerType"></resultLayer>
+    <resultLayer
+      v-show="oResult.sWinner != ''"
+      :sWinner="oResult.sWinner"
+      :sWinnerType="oResult.sWinnerType">
+    </resultLayer>
     <btnLayer
       :nBtnGroupType="nBtnGroupType"
       :bEnabledPlayCards="bEnabledPlayCards"

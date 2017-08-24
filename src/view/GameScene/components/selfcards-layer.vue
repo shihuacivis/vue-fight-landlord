@@ -7,9 +7,9 @@
     </div>
     <div class="handcards"
     v-releaseoutside="handleReleaseOutside"
-    v-touch_start="handleSelect"
-    v-touch_move="handleMove"
-    v-touch_end="handleRelease">
+    v-touch-start="handleSelect"
+    v-touch-move="handleMove"
+    v-touch-end="handleRelease">
       <card
         v-for="(oCard, index) in aHandCards"
         :nCard="oCard.nCard"
@@ -28,9 +28,9 @@
 
 import card from './components/card.vue';
 import releaseoutside from '@/directive/releaseoutside';
-import touch_start from '@/directive/touchstart';
-import touch_move from '@/directive/touchmove';
-import touch_end from '@/directive/touchend';
+import touchStart from '@/directive/touchstart';
+import touchMove from '@/directive/touchmove';
+import touchEnd from '@/directive/touchend';
 
 import {CardControler} from '@/components/Card/CardControler.js';
 
@@ -41,9 +41,9 @@ export default {
   },
   directives: {
     releaseoutside,
-    touch_start,
-    touch_move,
-    touch_end
+    touchStart,
+    touchMove,
+    touchEnd
   },
   props: ['aCards', 'aOutCards', 'nCallLandlord', 'bNoOut', 'oAgaOut', 'aSelfSelectCards'],
   data () {
@@ -79,8 +79,6 @@ export default {
   },
   methods: {
     handleSelect(index = -1) {
-      // !this.bPicked && this.$emit('onPickCardStart');
-      console.info(index);
       if (index == -1) {
         return;
       }
