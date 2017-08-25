@@ -17,11 +17,14 @@
       :sBanker="sWhoIsBanker"
       :nSpread="nSpread">
     </basecardsLayer>
-    <agacardsLayer 
+    <agacardsLayer
       :aCards="aAgaCards"
       :aOutCards="aAgaOut"
-      :nCallLandlord="nAgaCallLandlord" 
-      :bNoOut="bAgaNoOut">
+      :nCallLandlord="nAgaCallLandlord"
+      :bNoOut="bAgaNoOut"
+      :bStartGame="bStartGame"
+      :nBankerSeat="nBankerSeat"
+      :nMing="nMing">
     </agacardsLayer>
     <resultLayer
       v-show="oResult.sWinner != ''"

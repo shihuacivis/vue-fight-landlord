@@ -1,9 +1,9 @@
 <template>
-  <div 
+  <div
     :class="sCardClass"
     :style="fCheckCardColor(nCard)">
-    <div calss="cardval">{{nCard|ftCardVal}}</div>
-    <div class="cardtype">{{nCard|ftCardType}}</div>
+    <div v-if="bShowCardsVal" calss="cardval">{{nCard|ftCardVal}}</div>
+    <div v-if="bShowCardsVal" class="cardtype">{{nCard|ftCardType}}</div>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ import {GameServer} from '@/components/Card/GameServer.js';
 
 export default {
   name: 'card',
-  props: ['nCard', 'nSizeType', 'bSelected', 'bPicked'],
+  props: ['nCard', 'nSizeType', 'bSelected', 'bPicked', 'bCardBack'],
   data () {
     return {
     }
@@ -41,6 +41,9 @@ export default {
         'move-up': this.bSelected,
         'picking': this.bPicked
       };
+    },
+    bShowCardsVal() {
+      return !this.bCardBack;
     }
   },
   methods: {
